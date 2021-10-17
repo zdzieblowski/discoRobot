@@ -1,4 +1,5 @@
 import os
+import json
 
 import discord
 from discord import DMChannel
@@ -7,18 +8,18 @@ import TenGiphPy
 
 ##
 
-client = discord.Client()
+with open('config.json') as config_file:
+        config_data = json.load(config_file)
+
+version = '0.0.2'
+logging = True
 
 ##
 
-version = '0.0.1'
-logging = True
-key = 'YOUR DISCORD KEY'
+client = discord.Client()
 
-ttoken = 'YOUR TENOR TOKEN'
-t = TenGiphPy.Tenor(token=ttoken)
-gtoken = 'YOUR GIPHY TOKEN'
-g = TenGiphPy.Giphy(token=gtoken)
+t = TenGiphPy.Tenor(token=config_data["tenor_key"])
+g = TenGiphPy.Giphy(token=config_data["giphy_key"])
 
 ##
 
@@ -91,5 +92,5 @@ async def on_message(message):
 
 ##
 
-print('DiscoRobot v{0} [API v{1.major}.{1.minor}.{1.micro}:{1.serial} {1.releaselevel}]\n'.format(version,discord.version_info))
-client.run(key)
+print('// discoRobot v{0} [API v{1.major}.{1.minor}.{1.micro}:{1.serial} {1.releaselevel}]\n'.format(version,discord.version_info))
+client.run(config_data["discord_key"])
