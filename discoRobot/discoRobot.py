@@ -69,7 +69,7 @@ async def on_message(message):
                                 return_message = ''
 
                                 if command == '$help':
-                                        return_message = '```DiscoRobot HELP\n\n$echo [attr] - echoes given attributes\n$giphy [attr] - shows random Giphy GIF found based on attributes given\n$tenor [attr] - shows random Tenor GIF based on attributes given```'
+                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{1} [attr] :: shows random result for `[attr]' search on Giphy\n{2} [attr] :: shows random result for `[attr]' search on Tenor```".format(version, aliases['giphy'],aliases['tenor'])
                                 elif command == '$echo':
                                         return_message = '``ECHO: {0}``'.format(command_attr)
                                 elif command in aliases['giphy']:
