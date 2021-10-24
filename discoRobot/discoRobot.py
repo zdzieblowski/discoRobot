@@ -1,25 +1,28 @@
 import os
 import json
+import random
 
 import discord
 from discord import DMChannel
 
 import TenGiphPy
+import pyimgur
 
 ##
 
 with open('config.json') as config_file:
         config_data = json.load(config_file)
 
-version = '0.0.2'
+version = '0.0.3'
 logging = True
 
 ##
 
 client = discord.Client()
 
-t = TenGiphPy.Tenor(token=config_data["tenor_key"])
 g = TenGiphPy.Giphy(token=config_data["giphy_key"])
+i = pyimgur.Imgur(config_data["imgur_id"])
+t = TenGiphPy.Tenor(token=config_data["tenor_key"])
 
 ##
 
@@ -35,6 +38,19 @@ def get_guild_names():
                 if g != len(guilds)-1:
                         list += ' | '
         return '[ {0} ]'.format(list)
+
+def imgur_search(query):
+        igur_search = i.search_gallery(query)
+
+        result = ""
+
+        igur_item = igur_search[random.randrange(len(igur_search))]
+        if type(igur_item) is pyimgur.Gallery_image:
+                result = igur_item.link
+        else:
+                result = igur_item.images[random.randrange(len(igur_item.images))].link
+
+        return result
 
 ##
 
@@ -64,17 +80,20 @@ async def on_message(message):
                                 command = command_split[0]
                                 command_attr = command_split[1:len(command_split)];
 
-                                aliases = {'tenor': ['$tenor', '$t'],'giphy': ['$giphy', '$g']}
+                                aliases = {'tenor': ['$tenor', '$t'], 'giphy': ['$giphy', '$g'], 'imgur': ['$imgur','$i']}
 
                                 return_message = ''
 
                                 if command == '$help':
-                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{1} [attr] :: shows random result for `[attr]' search on Giphy\n{2} [attr] :: shows random result for `[attr]' search on Tenor```".format(version, aliases['giphy'],aliases['tenor'])
+                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{1} [attr] :: shows random result for `[attr]' search on Giphy\n{2} [attr] :: shows random result for `[attr]' search on Imgur\n{3} [attr] :: shows random result for `[attr]' search on Tenor```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'])
                                 elif command == '$echo':
                                         return_message = '``ECHO: {0}``'.format(command_attr)
                                 elif command in aliases['giphy']:
                                         ggif = g.random(tag = ' '.join(command_attr))['data']['images']['downsized_large']['url']
                                         return_message = '{0}'.format(ggif)
+                                elif command in aliases['imgur']:
+                                        igur = imgur_search(' '.join(command_attr))
+                                        return_message = '{0}'.format(igur)
                                 elif command in aliases['tenor']:
                                         tgif = t.random(' '.join(command_attr))
                                         return_message = '{0}'.format(tgif)
