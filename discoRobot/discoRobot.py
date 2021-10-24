@@ -44,12 +44,18 @@ def imgur_search(query):
 
         igur_search = i.search_gallery(query)
 
-        igur_item = igur_search[random.randrange(len(igur_search))]
+        if len(igur_search) > 0:
+                igur_item = igur_search[random.randrange(len(igur_search))]
 
-        if type(igur_item) is pyimgur.Gallery_image:
-                igur_image = igur_item.link
+                if type(igur_item) is pyimgur.Gallery_image:
+                        igur_image = igur_item.link
+                else:
+                        if len(igur_item.images) > 0:
+                                igur_image = igur_item.images[random.randrange(len(igur_item.images))].link
+                        else:
+                                igur_image = "sorry, too rare"
         else:
-                igur_image = igur_item.images[random.randrange(len(igur_item.images))].link
+                igur_image = "sorry, too rare"
 
         return igur_image
 
@@ -90,14 +96,20 @@ async def on_message(message):
                                 elif command in aliases["echo"]:
                                         return_message = "``ECHO: {0}``".format(command_attr)
                                 elif command in aliases["giphy"]:
-                                        ggif = g.random(tag = " ".join(command_attr))["data"]["images"]["downsized_large"]["url"]
-                                        return_message = '{0}'.format(ggif)
+                                        try:
+                                                ggif = g.random(tag = " ".join(command_attr))["data"]["images"]["downsized_large"]["url"]
+                                                return_message = "{0}".format(ggif)
+                                        except:
+                                                return_message = "sorry, too rare"
                                 elif command in aliases["imgur"]:
                                         igur = imgur_search(" ".join(command_attr))
                                         return_message = "{0}".format(igur)
                                 elif command in aliases["tenor"]:
-                                        tgif = t.random(" ".join(command_attr))
-                                        return_message = "{0}".format(tgif)
+                                        try:
+                                                tgif = t.random(" ".join(command_attr))
+                                                return_message = "{0}".format(tgif)
+                                        except:
+                                                return_message = "sorry, too rare"
                                 else:
                                         type = "<CmdFailure>"
                                         return_message = "``UNKNOWN COMMAND '{0}'``".format(command)
