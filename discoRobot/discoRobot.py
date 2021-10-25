@@ -13,7 +13,7 @@ import pyimgur
 with open("config.json") as config_file:
         config_data = json.load(config_file)
 
-version = "0.0.3"
+version = "0.0.4"
 logging = True
 
 ##
@@ -87,12 +87,12 @@ async def on_message(message):
                                 command = command_split[0]
                                 command_attr = command_split[1:len(command_split)];
 
-                                aliases = {"tenor": ["$tenor", "$t"], "giphy": ["$giphy", "$g"], "imgur": ["$imgur","$i"], "echo": ["$echo"]}
+                                aliases = {"tenor": ["$tenor", "$t"], "giphy": ["$giphy", "$g"], "imgur": ["$imgur","$i"], "echo": ["$echo","$e"], "help": ["$help","$h"]}
 
                                 return_message = ""
 
-                                if command == "$help":
-                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{1} [attr] :: shows random result for `[attr]' search on Giphy\n{2} [attr] :: shows random result for `[attr]' search on Imgur\n{3} [attr] :: shows random result for `[attr]' search on Tenor```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'])
+                                if command in aliases["help"]:
+                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{4} <attr> :: echoes elements of given `attr'\n{1} <attr> :: shows random result for `attr' search on Giphy\n{5} :: shows this help message\n{2} <attr> :: shows random result for `attr' search on Imgur\n{3} <attr> :: shows random result for `attr' search on Tenor```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'], aliases['echo'], aliases['help'])
                                 elif command in aliases["echo"]:
                                         return_message = "``ECHO: {0}``".format(command_attr)
                                 elif command in aliases["giphy"]:
