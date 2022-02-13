@@ -8,12 +8,14 @@ from discord import DMChannel
 import TenGiphPy
 import pyimgur
 
+from mtranslate import translate
+
 ##
 
 with open("config.json") as config_file:
         config_data = json.load(config_file)
 
-version = "0.0.4"
+version = "0.0.5"
 logging = True
 
 ##
@@ -87,14 +89,16 @@ async def on_message(message):
                                 command = command_split[0]
                                 command_attr = command_split[1:len(command_split)];
 
-                                aliases = {"tenor": ["$tenor", "$t"], "giphy": ["$giphy", "$g"], "imgur": ["$imgur","$i"], "echo": ["$echo","$e"], "help": ["$help","$h"]}
+                                aliases = {"tenor": ["$tenor", "$t"], "giphy": ["$giphy", "$g"], "imgur": ["$imgur", "$i"], "translate": ["$2"], "echo": ["$echo", "$e"], "help": ["$help", "$h"]}
 
                                 return_message = ""
 
                                 if command in aliases["help"]:
-                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{4} <attr> :: echoes elements of given `attr'\n{1} <attr> :: shows random result for `attr' search on Giphy\n{5} :: shows this help message\n{2} <attr> :: shows random result for `attr' search on Imgur\n{3} <attr> :: shows random result for `attr' search on Tenor```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'], aliases['echo'], aliases['help'])
+                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{4} <attr> :: echoes elements of given `attr'\n{1} <attr> :: shows random result for `attr' search on Giphy\n{5} :: shows this help message\n{2} <attr> :: shows random result for `attr' search on Imgur\n{3} <attr> :: shows random result for `attr' search on Tenor\n['$2<language>'] <attr> :: translates `attr' to a give `language'```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'], aliases['echo'], aliases['help'])
                                 elif command in aliases["echo"]:
                                         return_message = "``ECHO: {0}``".format(command_attr)
+                                elif command[:2] in aliases["translate"]:
+                                        return_message = translate(" ".join(command_attr), command[2:])
                                 elif command in aliases["giphy"]:
                                         try:
                                                 ggif = g.random(tag = " ".join(command_attr))["data"]["images"]["downsized_large"]["url"]
