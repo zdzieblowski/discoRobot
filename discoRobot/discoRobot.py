@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import argparse
 
 import discord
 from discord import DMChannel
@@ -12,10 +13,20 @@ from mtranslate import translate
 
 ##
 
-with open("config.json") as config_file:
-        config_data = json.load(config_file)
+argp = argparse.ArgumentParser()
+argp.add_argument("-c", "--config", help="specify path to a configuration file")
+args = argp.parse_args()
 
-version = "0.0.5"
+config_path = args.config if args.config else "config.json"
+
+try:
+        with open(config_path) as config_file:
+                config_data = json.load(config_file)
+except:
+        print("<ERROR> CONFIGURATION FILE CAN NOT BE OPEN: %s.\nTERMINATING." % config_path)
+        exit()
+
+version = "0.0.6"
 logging = True
 
 ##
