@@ -26,8 +26,8 @@ except:
         print("<ERROR> CONFIGURATION FILE CAN NOT BE OPEN: %s.\nTERMINATING." % config_path)
         exit()
 
-version = "0.0.6"
-logging = True
+version = config_data["version"]
+logging = config_data["logging"]
 
 ##
 

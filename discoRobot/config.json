@@ -1,5 +1,9 @@
 {
+    "logging": true,
+    "version": "0.0.7",
+
     "discord_key": "",
+
     "giphy_key": "",
     "imgur_id": "",
     "tenor_key": ""
