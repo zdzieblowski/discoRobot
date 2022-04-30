@@ -102,12 +102,21 @@ async def on_message(message):
 
                                 aliases = {"tenor": ["$tenor", "$t"], "giphy": ["$giphy", "$g"], "imgur": ["$imgur", "$i"], "translate": ["$2"], "echo": ["$echo", "$e"], "help": ["$help", "$h"]}
 
+                                admin_aliases = {"apache2_errors": ["$a2e"]}
+
                                 return_message = ""
 
-                                if command in aliases["help"]:
-                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n```asciidoc\n{4} <attr> :: echoes elements of given `attr'\n{1} <attr> :: shows random result for `attr' search on Giphy\n{5} :: shows this help message\n{2} <attr> :: shows random result for `attr' search on Imgur\n{3} <attr> :: shows random result for `attr' search on Tenor\n['$2<language>'] <attr> :: translates `attr' to a give `language'```".format(version, aliases['giphy'], aliases['imgur'], aliases['tenor'], aliases['echo'], aliases['help'])
-                                elif command in aliases["echo"]:
+                                # COMMANDS
+
+                                if command in aliases["echo"]:
                                         return_message = "``ECHO: {0}``".format(command_attr)
+                                elif command in aliases["help"]:
+                                        return_message = "> **discoRobot**\n\n*version {0}*\n\n".format(version)
+                                        return_message += "```asciidoc\n{3} <sentence> :: list words in given `sentence'\n{0} <attribute> :: show random result for `attribute' search on Giphy\n{4} :: show this help message\n{1} <attribute> :: show random result for `attribute' search on Imgur\n{2} <attribute> :: show random result for `attribute' search on Tenor\n['$2<language>'] <sentence> :: translates given `sentence' to a specified `language'```".format(aliases['giphy'], aliases['imgur'], aliases['tenor'], aliases['echo'], aliases['help'])
+
+                                        if str(message.author) in config_data["administrators"]:
+                                                return_message += "```asciidoc\n{0} :: show tail 1994 characters of Apache2 error log```".format(admin_aliases['apache2_errors'])
+
                                 elif command[:2] in aliases["translate"]:
                                         return_message = translate(" ".join(command_attr), command[2:])
                                 elif command in aliases["giphy"]:
@@ -125,6 +134,17 @@ async def on_message(message):
                                                 return_message = "{0}".format(tgif)
                                         except:
                                                 return_message = "sorry, too rare"
+
+                                # ADMIN COMMANDS
+
+                                elif command in admin_aliases["apache2_errors"]:
+                                        if str(message.author) in config_data["administrators"]:
+                                                return_message = "```{0}```".format(os.popen("tail -c 1994 /var/log/apache2/error.log").read())
+                                        else:
+                                                return_message = "``USER {0} IS NOT AN ADMINISTRATOR``".format(message.author.nick)
+
+                                # UNKNOWN COMMANDS
+
                                 else:
                                         type = "<CmdFailure>"
                                         return_message = "``UNKNOWN COMMAND '{0}'``".format(command)

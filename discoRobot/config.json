@@ -1,9 +1,10 @@
 {
     "logging": true,
-    "version": "0.0.7",
+    "version": "0.0.8",
+
+    "administrators": [""],
 
     "discord_key": "",
-
     "giphy_key": "",
     "imgur_id": "",
     "tenor_key": ""
