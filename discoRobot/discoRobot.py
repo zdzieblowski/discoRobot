@@ -106,6 +106,10 @@ async def on_message(message):
 
                                 return_message = ""
 
+                                # CHECK YOUR PRIVILEGE xD
+
+                                is_admin = str(message.author) in config_data["administrators"]
+
                                 # COMMANDS
 
                                 if command in aliases["echo"]:
@@ -138,7 +142,7 @@ async def on_message(message):
                                 # ADMIN COMMANDS
 
                                 elif command in admin_aliases["apache2_errors"]:
-                                        if str(message.author) in config_data["administrators"]:
+                                        if is_admin:
                                                 return_message = "```{0}```".format(os.popen("tail -c 1994 /var/log/apache2/error.log").read())
                                         else:
                                                 return_message = "``USER {0} IS NOT AN ADMINISTRATOR``".format(message.author.nick)
